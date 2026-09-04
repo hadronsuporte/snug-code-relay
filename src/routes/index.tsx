@@ -227,17 +227,17 @@ function Index() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f6f7f2] text-[#17201c]">
+    <main className="min-h-screen overflow-x-hidden bg-[#eef1ef] text-[#17201c]">
       <div className="flex min-h-screen">
-        <aside className="hidden w-64 shrink-0 border-r border-[#d9ded2] bg-[#18241f] text-white lg:block">
+        <aside className="hidden w-60 shrink-0 border-r border-[#243b34] bg-[#10251f] text-white lg:block">
           <div className="border-b border-white/10 px-6 py-5">
             <div className="flex items-center gap-3">
-              <div className="flex size-10 items-center justify-center rounded-md bg-[#f2c14e] text-[#18241f]">
+              <div className="flex size-10 items-center justify-center rounded-md bg-[#e8b84b] text-[#10251f]">
                 <Fuel className="size-5" />
               </div>
               <div>
-                <p className="text-sm font-semibold uppercase tracking-wide">Combustivel</p>
-                <p className="text-xs text-white/60">Roteirizacao</p>
+                <p className="text-sm font-semibold">Central de combustivel</p>
+                <p className="text-xs text-white/55">Operacao de entregas</p>
               </div>
             </div>
           </div>
@@ -263,43 +263,47 @@ function Index() {
         </aside>
 
         <section className="min-w-0 flex-1">
-          <header className="sticky top-0 z-10 border-b border-[#d9ded2] bg-[#f6f7f2]/95 px-4 py-4 backdrop-blur md:px-8">
+          <header className="sticky top-0 z-20 border-b border-[#d2d9d5] bg-[#f8faf8]/95 px-4 py-3 backdrop-blur md:px-8">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              <div>
-                <p className="text-xs font-semibold uppercase text-[#66756b]">
-                  Planejamento de rotas
-                </p>
-                <h1 className="text-2xl font-semibold tracking-normal text-[#17201c] md:text-3xl">
-                  Distribuicao inteligente de entregas
-                </h1>
+              <div className="flex items-center gap-3">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-[#10251f] text-[#e8b84b] lg:hidden">
+                  <Fuel className="size-5" />
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-[#66756b]">Operacao / Planejamento</p>
+                  <h1 className="text-xl font-semibold text-[#17201c] md:text-2xl">
+                    Quadro de rotas
+                  </h1>
+                </div>
               </div>
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge className="bg-[#e9f2eb] text-[#23553a] hover:bg-[#e9f2eb]">
+              <div className="flex flex-wrap items-center gap-2 pl-[52px] md:pl-0">
+                <Badge className="border border-[#bfd5c7] bg-[#e7f1ea] text-[#1e6342] hover:bg-[#e7f1ea]">
+                  <span className="mr-1.5 size-1.5 rounded-full bg-[#2f8b5a]" />
                   {geocodedCount}/{orders.length} geocodificados
                 </Badge>
-                <Badge variant={routePlan.status === "APROVADA" ? "default" : "secondary"}>
-                  {routePlan.status}
+                <Badge className="border border-[#d2d9d5] bg-white text-[#45534b] hover:bg-white">
+                  {routePlan.status === "APROVADA" ? "Rota aprovada" : "Plano otimizado"}
                 </Badge>
               </div>
             </div>
           </header>
 
-          <div className="space-y-6 px-4 py-6 md:px-8">
-            <div className="rounded-md border border-[#d9ded2] bg-white px-4 py-3 shadow-sm">
+          <div className="space-y-5 px-3 py-4 md:px-6 md:py-6 xl:px-8">
+            <div className="rounded-md border border-[#ead9b5] bg-[#fffaf0] px-4 py-3">
               <div className="flex items-start gap-3">
                 <AlertTriangle className="mt-0.5 size-5 shrink-0 text-[#b45309]" />
                 <p className="text-sm text-[#334139]">{message}</p>
               </div>
             </div>
 
-            <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+            <section className="grid grid-cols-2 overflow-hidden rounded-md border border-[#d2d9d5] bg-white sm:grid-cols-3 xl:grid-cols-5">
               {metrics.map((metric) => (
                 <MetricTile key={metric.label} {...metric} />
               ))}
             </section>
 
-            <section className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(480px,0.9fr)]">
-              <div className="space-y-6">
+            <section className="grid gap-5 xl:grid-cols-[minmax(0,0.9fr)_minmax(520px,1.1fr)]">
+              <div className="min-w-0 space-y-5">
                 <Panel
                   title="Veiculos"
                   description="Caminhoes inativos nao entram na roteirizacao."
@@ -341,38 +345,42 @@ function Index() {
                       }
                     />
                   </div>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Codigo</TableHead>
-                        <TableHead>Placa</TableHead>
-                        <TableHead>Capacidade</TableHead>
-                        <TableHead>Motorista</TableHead>
-                        <TableHead>Status</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {vehicles.map((vehicle) => (
-                        <TableRow key={vehicle.id}>
-                          <TableCell className="font-medium">{vehicle.codigo}</TableCell>
-                          <TableCell>{vehicle.placa}</TableCell>
-                          <TableCell>{formatLiters(vehicle.capacidadeLitros)}</TableCell>
-                          <TableCell>{vehicle.motoristaPadrao}</TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
-                              <Switch
-                                checked={vehicle.ativo}
-                                onCheckedChange={() => handleToggleVehicle(vehicle.id)}
-                              />
-                              <span className={vehicle.ativo ? "text-[#23553a]" : "text-[#8a3428]"}>
-                                {vehicle.ativo ? "Ativo" : "Inativo"}
-                              </span>
-                            </div>
-                          </TableCell>
+                  <div className="overflow-x-auto">
+                    <Table className="min-w-[660px]">
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Codigo</TableHead>
+                          <TableHead>Placa</TableHead>
+                          <TableHead>Capacidade</TableHead>
+                          <TableHead>Motorista</TableHead>
+                          <TableHead>Status</TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {vehicles.map((vehicle) => (
+                          <TableRow key={vehicle.id}>
+                            <TableCell className="font-medium">{vehicle.codigo}</TableCell>
+                            <TableCell>{vehicle.placa}</TableCell>
+                            <TableCell>{formatLiters(vehicle.capacidadeLitros)}</TableCell>
+                            <TableCell>{vehicle.motoristaPadrao}</TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <Switch
+                                  checked={vehicle.ativo}
+                                  onCheckedChange={() => handleToggleVehicle(vehicle.id)}
+                                />
+                                <span
+                                  className={vehicle.ativo ? "text-[#23553a]" : "text-[#8a3428]"}
+                                >
+                                  {vehicle.ativo ? "Ativo" : "Inativo"}
+                                </span>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
                 </Panel>
 
                 <Panel
@@ -440,49 +448,51 @@ function Index() {
                     </Button>
                   }
                 >
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Pedido</TableHead>
-                        <TableHead>Cliente</TableHead>
-                        <TableHead>Cidade</TableHead>
-                        <TableHead>Litros</TableHead>
-                        <TableHead>Prioridade</TableHead>
-                        <TableHead>Geo</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {orders.map((order) => (
-                        <TableRow key={order.id}>
-                          <TableCell className="font-medium">{order.numeroPedido}</TableCell>
-                          <TableCell>{order.cliente}</TableCell>
-                          <TableCell>
-                            {order.cidade}/{order.uf}
-                          </TableCell>
-                          <TableCell>{formatLiters(order.litros)}</TableCell>
-                          <TableCell>{order.prioridade}</TableCell>
-                          <TableCell>
-                            <Badge
-                              variant={
-                                order.geocodeStatus === "GEOCODIFICADO" ? "default" : "secondary"
-                              }
-                              className={
-                                order.geocodeStatus === "GEOCODIFICADO"
-                                  ? "bg-[#e9f2eb] text-[#23553a] hover:bg-[#e9f2eb]"
-                                  : ""
-                              }
-                            >
-                              {order.geocodeStatus}
-                            </Badge>
-                          </TableCell>
+                  <div className="overflow-x-auto">
+                    <Table className="min-w-[720px]">
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Pedido</TableHead>
+                          <TableHead>Cliente</TableHead>
+                          <TableHead>Cidade</TableHead>
+                          <TableHead>Litros</TableHead>
+                          <TableHead>Prioridade</TableHead>
+                          <TableHead>Geo</TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {orders.map((order) => (
+                          <TableRow key={order.id}>
+                            <TableCell className="font-medium">{order.numeroPedido}</TableCell>
+                            <TableCell>{order.cliente}</TableCell>
+                            <TableCell>
+                              {order.cidade}/{order.uf}
+                            </TableCell>
+                            <TableCell>{formatLiters(order.litros)}</TableCell>
+                            <TableCell>{order.prioridade}</TableCell>
+                            <TableCell>
+                              <Badge
+                                variant={
+                                  order.geocodeStatus === "GEOCODIFICADO" ? "default" : "secondary"
+                                }
+                                className={
+                                  order.geocodeStatus === "GEOCODIFICADO"
+                                    ? "bg-[#e9f2eb] text-[#23553a] hover:bg-[#e9f2eb]"
+                                    : ""
+                                }
+                              >
+                                {order.geocodeStatus}
+                              </Badge>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
                 </Panel>
               </div>
 
-              <div className="space-y-6">
+              <div className="min-w-0 space-y-5">
                 <Panel
                   title="Gerar roteirizacao"
                   description="Uma viagem por caminhao, limite fisico de litros e validacao local dupla."
@@ -682,12 +692,14 @@ function MetricTile({
   icon: LucideIcon;
 }) {
   return (
-    <div className="rounded-md border border-[#d9ded2] bg-white p-4 shadow-sm">
-      <div className="mb-3 flex size-9 items-center justify-center rounded-md bg-[#eef4ea] text-[#23553a]">
-        <Icon className="size-4" />
+    <div className="flex min-h-24 items-center gap-3 border-b border-r border-[#e2e7e4] p-3 md:min-h-28 md:p-4">
+      <div className="flex size-9 shrink-0 items-center justify-center rounded-md bg-[#e7f1ea] text-[#246444]">
+        <Icon className="size-[18px]" />
       </div>
-      <p className="text-sm text-[#66756b]">{label}</p>
-      <p className="mt-1 text-xl font-semibold">{value}</p>
+      <div className="min-w-0">
+        <p className="text-xs leading-tight text-[#66756b] md:text-sm">{label}</p>
+        <p className="mt-1 truncate text-lg font-semibold text-[#17201c] md:text-xl">{value}</p>
+      </div>
     </div>
   );
 }
@@ -704,24 +716,24 @@ function Panel({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-md border border-[#d9ded2] bg-white p-4 shadow-sm">
-      <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+    <section className="overflow-hidden rounded-md border border-[#d2d9d5] bg-white">
+      <div className="flex flex-col gap-3 border-b border-[#e2e7e4] px-4 py-3 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="text-base font-semibold">{title}</h2>
-          <p className="text-sm text-[#66756b]">{description}</p>
+          <h2 className="text-[15px] font-semibold text-[#17201c]">{title}</h2>
+          <p className="mt-0.5 text-xs leading-5 text-[#66756b] md:text-sm">{description}</p>
         </div>
         {action}
       </div>
-      <div className="space-y-4">{children}</div>
+      <div className="space-y-4 p-4">{children}</div>
     </section>
   );
 }
 
 function SmallStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-md border border-[#e5e9df] bg-[#fbfcf8] p-3">
-      <p className="text-xs uppercase text-[#66756b]">{label}</p>
-      <p className="mt-1 text-sm font-semibold">{value}</p>
+    <div className="border-l-2 border-[#aac7b5] bg-[#f5f8f6] px-3 py-2.5">
+      <p className="text-xs text-[#66756b]">{label}</p>
+      <p className="mt-0.5 text-sm font-semibold text-[#17201c]">{value}</p>
     </div>
   );
 }
@@ -750,7 +762,7 @@ function MapPanel({ routes }: { routes: PlannedRoute[] }) {
         </Badge>
       }
     >
-      <div className="relative h-[420px] overflow-hidden rounded-md border border-[#cbd5c6] bg-[#eef1e8]">
+      <div className="relative h-[340px] overflow-hidden rounded-md border border-[#c4cec8] bg-[#e8eeea] md:h-[440px]">
         <div className="absolute inset-0 opacity-70">
           <div className="h-full w-full bg-[linear-gradient(90deg,#dbe3d3_1px,transparent_1px),linear-gradient(0deg,#dbe3d3_1px,transparent_1px)] bg-[size:42px_42px]" />
         </div>
@@ -805,7 +817,7 @@ function MapPanel({ routes }: { routes: PlannedRoute[] }) {
                 return (
                   <div
                     key={stop.order.id}
-                    className="absolute min-w-28 -translate-x-1/2 -translate-y-1/2 rounded-md border border-white bg-white px-2 py-1 text-xs shadow"
+                    className="absolute w-8 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-white p-1 text-[10px] shadow md:w-28 md:rounded-md md:border md:px-2 md:py-1 md:text-xs"
                     style={{ left: `${point.x}%`, top: `${point.y}%` }}
                     title={`${stop.order.cliente} - ${formatLiters(stop.order.litros)}`}
                   >
@@ -816,9 +828,11 @@ function MapPanel({ routes }: { routes: PlannedRoute[] }) {
                       >
                         {stop.sequencia}
                       </span>
-                      <span className="truncate font-medium">{stop.order.cidade}</span>
+                      <span className="hidden truncate font-medium md:block">
+                        {stop.order.cidade}
+                      </span>
                     </div>
-                    <p className="mt-0.5 truncate text-[#66756b]">
+                    <p className="mt-0.5 hidden truncate text-[#66756b] md:block">
                       {formatLiters(stop.order.litros)}
                     </p>
                   </div>

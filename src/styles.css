@@ -1,6 +1,7 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+@import "@fontsource-variable/ibm-plex-sans";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -140,5 +141,16 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: "IBM Plex Sans Variable", "Segoe UI", sans-serif;
+    font-feature-settings:
+      "ss01" 1,
+      "cv05" 1;
+    letter-spacing: 0;
+    overflow-x: hidden;
+  }
+
+  button,
+  input {
+    font: inherit;
   }
 }
