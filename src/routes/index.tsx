@@ -234,10 +234,10 @@ function Index() {
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#eef1ef] text-[#17201c]">
       <div className="flex min-h-screen">
-        <aside className="hidden w-60 shrink-0 border-r border-[#243b34] bg-[#10251f] text-white lg:block">
+        <aside className="hidden w-60 shrink-0 border-r border-[#262626] bg-black text-white lg:block">
           <div className="border-b border-white/10 px-6 py-5">
             <div className="flex items-center gap-3">
-              <div className="flex size-10 items-center justify-center rounded-md bg-[#e8b84b] text-[#10251f]">
+              <div className="flex size-10 items-center justify-center rounded-md bg-[#e8b84b] text-black">
                 <Fuel className="size-5" />
               </div>
               <div>
@@ -271,7 +271,7 @@ function Index() {
           <header className="sticky top-0 z-20 border-b border-[#d2d9d5] bg-white/95 px-4 py-2.5 backdrop-blur md:px-8">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-[#10251f] text-[#e8b84b] lg:hidden">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-black text-[#e8b84b] lg:hidden">
                   <Fuel className="size-5" />
                 </div>
                 <div>
@@ -294,7 +294,7 @@ function Index() {
           </header>
 
           <div className="flex flex-col gap-5 px-3 py-4 md:px-6 md:py-6 xl:px-8 [&>*:nth-child(1)]:order-1 [&>*:nth-child(2)]:order-3 [&>*:nth-child(3)]:order-2">
-            <section className="overflow-hidden rounded-md bg-[#0b2b26] text-white">
+            <section className="overflow-hidden rounded-md bg-black text-white">
               <div className="grid gap-6 px-5 py-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:px-7 md:py-6">
                 <div>
                   <div className="mb-3 flex items-center gap-2 text-xs text-white/60">
@@ -319,7 +319,7 @@ function Index() {
                   </Button>
                   <Button
                     onClick={handleApprove}
-                    className="bg-[#f2b544] text-[#10251f] hover:bg-[#ffc95d]"
+                    className="bg-[#f2b544] text-black hover:bg-[#ffc95d]"
                   >
                     <ShieldCheck className="size-4" />
                     Liberar rotas
@@ -635,7 +635,7 @@ function Index() {
                               key={stop.order.id}
                               className="grid gap-2 rounded-md border border-[#e5e9df] bg-white p-3 text-sm md:grid-cols-[36px_minmax(0,1fr)_auto]"
                             >
-                              <div className="flex size-8 items-center justify-center rounded-md bg-[#18241f] text-white">
+                              <div className="flex size-8 items-center justify-center rounded-md bg-black text-white">
                                 {stop.sequencia}
                               </div>
                               <div>
@@ -839,7 +839,7 @@ function MapPanel({ routes }: { routes: PlannedRoute[] }) {
           return (
             <div key={route.id}>
               <div
-                className="absolute flex -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-md bg-[#18241f] px-2 py-1 text-xs font-medium text-white shadow"
+                className="absolute flex -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-md bg-black px-2 py-1 text-xs font-medium text-white shadow"
                 style={{ left: `${base.x}%`, top: `${base.y}%` }}
               >
                 <Truck className="size-3" />
