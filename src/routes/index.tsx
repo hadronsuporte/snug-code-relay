@@ -90,6 +90,11 @@ function Index() {
       ? routePlan.routes
       : routePlan.routes.filter((route) => route.id === selectedRouteId);
   const geocodedCount = orders.filter((order) => order.geocodeStatus === "GEOCODIFICADO").length;
+  const todayLabel = new Intl.DateTimeFormat("pt-BR", {
+    weekday: "long",
+    day: "2-digit",
+    month: "long",
+  }).format(new Date());
 
   const metrics = [
     { label: "Pedidos aguardando", value: awaitingOrders.length.toString(), icon: ClipboardCheck },
@@ -263,38 +268,69 @@ function Index() {
         </aside>
 
         <section className="min-w-0 flex-1">
-          <header className="sticky top-0 z-20 border-b border-[#d2d9d5] bg-[#f8faf8]/95 px-4 py-3 backdrop-blur md:px-8">
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <header className="sticky top-0 z-20 border-b border-[#d2d9d5] bg-white/95 px-4 py-2.5 backdrop-blur md:px-8">
+            <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-[#10251f] text-[#e8b84b] lg:hidden">
                   <Fuel className="size-5" />
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-[#66756b]">Operacao / Planejamento</p>
-                  <h1 className="text-xl font-semibold text-[#17201c] md:text-2xl">
-                    Quadro de rotas
+                  <h1 className="text-base font-semibold text-[#17201c] md:text-lg">
+                    Central de despacho
                   </h1>
+                  <p className="hidden text-xs capitalize text-[#66756b] sm:block">{todayLabel}</p>
                 </div>
               </div>
-              <div className="flex flex-wrap items-center gap-2 pl-[52px] md:pl-0">
+              <div className="flex items-center gap-2">
                 <Badge className="border border-[#bfd5c7] bg-[#e7f1ea] text-[#1e6342] hover:bg-[#e7f1ea]">
                   <span className="mr-1.5 size-1.5 rounded-full bg-[#2f8b5a]" />
-                  {geocodedCount}/{orders.length} geocodificados
-                </Badge>
-                <Badge className="border border-[#d2d9d5] bg-white text-[#45534b] hover:bg-white">
-                  {routePlan.status === "APROVADA" ? "Rota aprovada" : "Plano otimizado"}
+                  <span className="hidden sm:inline">
+                    {geocodedCount}/{orders.length} geocodificados
+                  </span>
+                  <span className="sm:hidden">Online</span>
                 </Badge>
               </div>
             </div>
           </header>
 
-          <div className="space-y-5 px-3 py-4 md:px-6 md:py-6 xl:px-8">
-            <div className="rounded-md border border-[#ead9b5] bg-[#fffaf0] px-4 py-3">
-              <div className="flex items-start gap-3">
-                <AlertTriangle className="mt-0.5 size-5 shrink-0 text-[#b45309]" />
-                <p className="text-sm text-[#334139]">{message}</p>
+          <div className="flex flex-col gap-5 px-3 py-4 md:px-6 md:py-6 xl:px-8 [&>*:nth-child(1)]:order-1 [&>*:nth-child(2)]:order-3 [&>*:nth-child(3)]:order-2">
+            <section className="overflow-hidden rounded-md bg-[#0b2b26] text-white">
+              <div className="grid gap-6 px-5 py-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:px-7 md:py-6">
+                <div>
+                  <div className="mb-3 flex items-center gap-2 text-xs text-white/60">
+                    <span className="size-2 rounded-full bg-[#2bd18b]" />
+                    Planejamento pronto para revisao
+                  </div>
+                  <h2 className="max-w-2xl text-2xl font-semibold leading-tight md:text-3xl">
+                    {routePlan.routes.length} caminhoes cobrem {formatLiters(totalLiters)} hoje
+                  </h2>
+                  <p className="mt-2 max-w-xl text-sm leading-6 text-white/65">
+                    Revise a distribuicao, ajuste as paradas e libere o plano para a operacao.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2 md:justify-end">
+                  <Button
+                    variant="outline"
+                    onClick={handleGenerateRouting}
+                    className="border-white/25 bg-transparent text-white hover:bg-white/10 hover:text-white"
+                  >
+                    <RouteIcon className="size-4" />
+                    Recalcular
+                  </Button>
+                  <Button
+                    onClick={handleApprove}
+                    className="bg-[#f2b544] text-[#10251f] hover:bg-[#ffc95d]"
+                  >
+                    <ShieldCheck className="size-4" />
+                    Liberar rotas
+                  </Button>
+                </div>
               </div>
-            </div>
+              <div className="flex items-start gap-3 border-t border-white/10 bg-white/[0.04] px-5 py-3 md:px-7">
+                <AlertTriangle className="mt-0.5 size-4 shrink-0 text-[#f2b544]" />
+                <p className="text-xs leading-5 text-white/70 md:text-sm">{message}</p>
+              </div>
+            </section>
 
             <section className="grid grid-cols-2 overflow-hidden rounded-md border border-[#d2d9d5] bg-white sm:grid-cols-3 xl:grid-cols-5">
               {metrics.map((metric) => (
@@ -302,8 +338,8 @@ function Index() {
               ))}
             </section>
 
-            <section className="grid gap-5 xl:grid-cols-[minmax(0,0.9fr)_minmax(520px,1.1fr)]">
-              <div className="min-w-0 space-y-5">
+            <section className="grid gap-5 xl:grid-cols-[minmax(560px,1.2fr)_minmax(380px,0.8fr)]">
+              <div className="order-2 min-w-0 space-y-5">
                 <Panel
                   title="Veiculos"
                   description="Caminhoes inativos nao entram na roteirizacao."
@@ -492,7 +528,7 @@ function Index() {
                 </Panel>
               </div>
 
-              <div className="min-w-0 space-y-5">
+              <div className="order-1 flex min-w-0 flex-col gap-5 [&>*:nth-child(1)]:order-2 [&>*:nth-child(2)]:order-1 [&>*:nth-child(3)]:order-3 [&>*:nth-child(4)]:order-4">
                 <Panel
                   title="Gerar roteirizacao"
                   description="Uma viagem por caminhao, limite fisico de litros e validacao local dupla."
